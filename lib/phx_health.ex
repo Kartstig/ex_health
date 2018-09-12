@@ -2,17 +2,22 @@ defmodule PhxHealth do
   @moduledoc """
   Documentation for PhxHealth.
   """
+  use Application
 
-  @doc """
-  Hello world.
+  def start(_type, args) do
+    import Supervisor.Spec
 
-  ## Examples
+    children = [
+      supervisor(PhxHealth.HealthServer, args)
+    ]
 
-      iex> PhxHealth.hello()
-      :world
+    opts = [strategy: :one_for_one, name: HealthCheck.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
 
-  """
-  def hello do
-    :world
+  @doc "Fetch the latest status"
+  @spec status() :: PhxHealth.Status.t()
+  def status() do
+    GenServer.call(PhxHealth.HealthServer, :status)
   end
 end
