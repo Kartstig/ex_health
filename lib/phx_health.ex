@@ -5,18 +5,21 @@ defmodule PhxHealth do
   use Application
 
   def start() do
-    conf = load_config()
-    start(:normal, [conf])
+    start(:normal, state: %PhxHealth.Status{})
   end
 
   def start(_type, args) do
     import Supervisor.Spec
 
+    configure(args)
+
+    initial_state = load_config()
+
     children = [
-      supervisor(PhxHealth.HealthServer, args)
+      supervisor(PhxHealth.HealthServer, [initial_state])
     ]
 
-    opts = [strategy: :one_for_one, name: HealthCheck.Supervisor]
+    opts = [strategy: :one_for_one, name: PhxHealth.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -24,6 +27,17 @@ defmodule PhxHealth do
   @spec status() :: PhxHealth.Status.t()
   def status() do
     GenServer.call(PhxHealth.HealthServer, :status)
+  end
+
+  def stop() do
+    Supervisor.stop(PhxHealth.Supervisor, :normal)
+  end
+
+  defp configure([]), do: nil
+
+  defp configure([{k, v} | remainder]) do
+    Application.put_env(:phx_health, k, v)
+    configure(remainder)
   end
 
   defp load_config() do
@@ -37,18 +51,25 @@ defmodule PhxHealth do
       end
 
     module = Application.get_env(:phx_health, :module)
-    interval_ms = Application.get_env(:phx_health, :interval_ms)
-
-    funcs = module.__info__(:functions)
+    interval_ms = Application.get_env(:phx_health, :interval_ms, 15000)
 
     mfas =
-      for {func, _arr} <- funcs do
-        %PhxHealth.Check{name: Atom.to_string(func), mfa: {module, func, []}}
+      case module do
+        nil -> transform_module_to_mfa(PhxHealth.HealthCheck)
+        mod -> transform_module_to_mfa(mod)
       end
 
     %PhxHealth.Status{
       checks: mfas,
       interval_ms: interval_ms
     }
+  end
+
+  defp transform_module_to_mfa(module) do
+    funcs = module.__info__(:functions)
+
+    for {func, _arr} <- funcs do
+      %PhxHealth.Check{name: Atom.to_string(func), mfa: {module, func, []}}
+    end
   end
 end

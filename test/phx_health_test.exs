@@ -3,12 +3,22 @@ defmodule PhxHealthTest do
 
   doctest PhxHealth
 
+  def ensure_down(_) do
+    case Process.whereis(PhxHealth.Supervisor) do
+      nil -> :ok
+      _ -> PhxHealth.stop()
+    end
+  end
+
+  @doc "This is a naive way to wait, but it works fine with small delays"
   def wait_for_poll(interval) do
     Process.sleep(interval * 2)
   end
 
   def good_result(), do: true
   def bad_result(), do: false
+
+  setup :ensure_down
 
   test "start/0 starts the HealthServer with configs" do
     defmodule TestHealthCallbacks do
@@ -42,13 +52,11 @@ defmodule PhxHealthTest do
   end
 
   test "start/2 starts the HealthServer" do
-    arg = %PhxHealth.Status{interval_ms: 2}
-    assert {:ok, _pid} = PhxHealth.start(:normal, [arg])
+    assert {:ok, _pid} = PhxHealth.start(:normal, interval_ms: 2)
   end
 
   test "status/0 returns health check data" do
-    arg = %PhxHealth.Status{interval_ms: 2}
-    {:ok, _pid} = PhxHealth.start(:normal, [arg])
+    {:ok, _pid} = PhxHealth.start(:normal, interval_ms: 2)
 
     assert %PhxHealth.Status{
              checks: _,
@@ -63,16 +71,16 @@ defmodule PhxHealthTest do
 
   test "status/0 returns healthy result when all results are good" do
     interval_ms = 5
-    good_text = "Something good"
 
-    arg = %PhxHealth.Status{
-      checks: [
-        %PhxHealth.Check{name: good_text, mfa: {__MODULE__, :good_result, []}}
-      ],
-      interval_ms: interval_ms
-    }
+    defmodule FakeTestGood do
+      def something_good(), do: true
+    end
 
-    {:ok, _pid} = PhxHealth.start(:normal, [arg])
+    {:ok, _pid} =
+      PhxHealth.start(:normal,
+        interval_ms: interval_ms,
+        module: __MODULE__.FakeTestGood
+      )
 
     wait_for_poll(interval_ms)
 
@@ -85,23 +93,22 @@ defmodule PhxHealthTest do
     } = PhxHealth.status()
 
     assert %DateTime{} = last_check
-    assert [{good_text, true}] == check_results
+    assert [{"something_good", true}] == check_results
   end
 
   test "status/0 returns unhealthy result when at least one result is bad" do
     interval_ms = 5
-    good_text = "Something good"
-    bad_text = "Something bad"
 
-    arg = %PhxHealth.Status{
-      checks: [
-        %PhxHealth.Check{name: good_text, mfa: {__MODULE__, :good_result, []}},
-        %PhxHealth.Check{name: bad_text, mfa: {__MODULE__, :bad_result, []}}
-      ],
-      interval_ms: interval_ms
-    }
+    defmodule FakeTestBad do
+      def something_good(), do: true
+      def something_bad(), do: false
+    end
 
-    {:ok, _pid} = PhxHealth.start(:normal, [arg])
+    {:ok, _pid} =
+      PhxHealth.start(:normal,
+        interval_ms: interval_ms,
+        module: __MODULE__.FakeTestBad
+      )
 
     Process.sleep(interval_ms)
 
@@ -112,6 +119,7 @@ defmodule PhxHealthTest do
       }
     } = PhxHealth.status()
 
-    assert [{good_text, true}, {bad_text, false}] == check_results
+    assert {"something_good", true} in check_results
+    assert {"something_bad", false} in check_results
   end
 end
