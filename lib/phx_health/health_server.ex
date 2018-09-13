@@ -78,7 +78,7 @@ defmodule PhxHealth.HealthServer do
 
   @spec perform_checks(list(), list()) :: list()
   defp perform_checks(
-         [%PhxHealth.Check{name: name, mfa: {m, f, a}} = check | remainder],
+         [%PhxHealth.Check{name: name, mfa: {m, f, a}} = _check | remainder],
          results
        ) do
     res = {name, apply(m, f, a)}

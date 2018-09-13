@@ -6,7 +6,38 @@ defmodule PhxHealthTest do
   def good_result(), do: true
   def bad_result(), do: false
 
-  test "start/0 starts the HealthServer" do
+  test "start/0 starts the HealthServer with configs" do
+    defmodule TestHealthCallbacks do
+      def some_fake_test(), do: true
+    end
+
+    interval = 1
+
+    Application.put_env(:phx_health, :interval, interval)
+
+    Application.put_env(:phx_health, :module, __MODULE__.TestHealthCallbacks)
+
+    assert {:ok, _pid} = PhxHealth.start()
+
+    Process.sleep(interval * 1000)
+    status = PhxHealth.status()
+
+    assert %PhxHealth.Status{
+             checks: [
+               %PhxHealth.Check{
+                 name: "some_fake_test",
+                 mfa: {TestHealthCallbacks, :some_fake_test, []}
+               }
+             ],
+             interval: interval,
+             result: %{
+               msg: :healthy,
+               check_results: [{"some_fake_test", true}]
+             }
+           } = status
+  end
+
+  test "start/2 starts the HealthServer" do
     arg = %PhxHealth.Status{interval: 2}
     assert {:ok, _pid} = PhxHealth.start(:normal, [arg])
   end
@@ -18,7 +49,7 @@ defmodule PhxHealthTest do
     assert %PhxHealth.Status{
              checks: _,
              interval: _,
-             last_check: _,
+             last_check: nil,
              result: %{
                msg: :pending,
                check_results: _
@@ -42,12 +73,14 @@ defmodule PhxHealthTest do
     Process.sleep(interval * 1000)
 
     %PhxHealth.Status{
+      last_check: last_check,
       result: %{
         msg: :healthy,
         check_results: check_results
       }
     } = PhxHealth.status()
 
+    assert %DateTime{} = last_check
     assert [{good_text, true}] == check_results
   end
 
