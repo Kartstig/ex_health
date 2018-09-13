@@ -48,5 +48,16 @@ jobs:
 
       - run: mix test  # run all tests in project
 
+      - restore_cache:
+          keys:
+            - v1-plt-cache-{{ checksum "mix.lock" }}
+            - v1-plt-cache
+      - run: mix dialyzer --plt
+      - save_cache:
+          key: v1-plt-cache-{{ checksum "mix.lock" }}
+          paths:
+            - _build
+            - ~/.mix
+
       - store_test_results:  # upload junit test results for display in Test Summary
           path: _build/test/phx_health # Replace with the name of your :app
