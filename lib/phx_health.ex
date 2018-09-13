@@ -37,7 +37,7 @@ defmodule PhxHealth do
       end
 
     module = Application.get_env(:phx_health, :module)
-    interval = Application.get_env(:phx_health, :interval)
+    interval_ms = Application.get_env(:phx_health, :interval_ms)
 
     funcs = module.__info__(:functions)
 
@@ -48,7 +48,7 @@ defmodule PhxHealth do
 
     %PhxHealth.Status{
       checks: mfas,
-      interval: interval
+      interval_ms: interval_ms
     }
   end
 end

@@ -8,7 +8,7 @@ defmodule PhxHealth.HealthServer do
   @impl true
   def init(state) do
     state
-    |> Map.get(:interval)
+    |> Map.get(:interval_ms)
     |> schedule_update()
 
     {:ok, state}
@@ -27,7 +27,7 @@ defmodule PhxHealth.HealthServer do
 
     # Schedule next call
     new_state
-    |> Map.get(:interval)
+    |> Map.get(:interval_ms)
     |> schedule_update()
 
     {:noreply, new_state}
@@ -66,8 +66,8 @@ defmodule PhxHealth.HealthServer do
   end
 
   @spec schedule_update(non_neg_integer) :: reference()
-  defp schedule_update(interval) do
-    Process.send_after(self(), :perform_check, interval * 1000)
+  defp schedule_update(interval_ms) do
+    Process.send_after(self(), :perform_check, interval_ms)
   end
 
   defp perform_checks(checks, results \\ [])
