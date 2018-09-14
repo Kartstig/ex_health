@@ -1,5 +1,5 @@
 defmodule PhxHealthTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   doctest PhxHealth
 
@@ -8,6 +8,11 @@ defmodule PhxHealthTest do
       nil -> :ok
       _ -> PhxHealth.stop()
     end
+  end
+
+  def reset_config(_) do
+    Application.put_env(:phx_health, :module, nil)
+    Application.put_env(:phx_health, :interval_ms, nil)
   end
 
   @doc "This is a naive way to wait, but it works fine with small delays"
@@ -19,10 +24,12 @@ defmodule PhxHealthTest do
   def bad_result(), do: false
 
   setup :ensure_down
+  setup :reset_config
 
   test "start/0 starts the HealthServer with configs" do
     defmodule TestHealthCallbacks do
-      def some_fake_test(), do: true
+      import PhxHealth
+      health_check("some_fake_test", do: true)
     end
 
     interval_ms = 5
@@ -40,7 +47,7 @@ defmodule PhxHealthTest do
              checks: [
                %PhxHealth.Check{
                  name: "some_fake_test",
-                 mfa: {TestHealthCallbacks, :some_fake_test, []}
+                 mfa: {TestHealthCallbacks, :hc__some_fake_test, []}
                }
              ],
              interval_ms: interval_ms,
@@ -55,8 +62,10 @@ defmodule PhxHealthTest do
     assert {:ok, _pid} = PhxHealth.start(:normal, interval_ms: 2)
   end
 
-  test "status/0 returns health check data" do
-    {:ok, _pid} = PhxHealth.start(:normal, interval_ms: 2)
+  test "status/0 returns health check data with default self check" do
+    interval_ms = 2
+
+    {:ok, _pid} = PhxHealth.start(:normal, interval_ms: interval_ms)
 
     assert %PhxHealth.Status{
              checks: _,
@@ -67,13 +76,28 @@ defmodule PhxHealthTest do
                check_results: _
              }
            } = PhxHealth.status()
+
+    wait_for_poll(interval_ms)
+
+    assert %PhxHealth.Status{
+             checks: _,
+             interval_ms: _,
+             last_check: %DateTime{},
+             result: %{
+               msg: :healthy,
+               check_results: check_results
+             }
+           } = PhxHealth.status()
+
+    assert {"PhxHealth_HealthServer", true} in check_results
   end
 
   test "status/0 returns healthy result when all results are good" do
     interval_ms = 5
 
     defmodule FakeTestGood do
-      def something_good(), do: true
+      import PhxHealth
+      health_check("something_good", do: true)
     end
 
     {:ok, _pid} =
@@ -93,15 +117,16 @@ defmodule PhxHealthTest do
     } = PhxHealth.status()
 
     assert %DateTime{} = last_check
-    assert [{"something_good", true}] == check_results
+    assert {"something_good", true} in check_results
   end
 
   test "status/0 returns unhealthy result when at least one result is bad" do
     interval_ms = 5
 
     defmodule FakeTestBad do
-      def something_good(), do: true
-      def something_bad(), do: false
+      import PhxHealth
+      health_check("something_good", do: true)
+      health_check("something_bad", do: false)
     end
 
     {:ok, _pid} =
