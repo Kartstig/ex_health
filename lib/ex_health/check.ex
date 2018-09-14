@@ -1,4 +1,4 @@
-defmodule PhxHealth.Check do
+defmodule ExHealth.Check do
   @type t :: %__MODULE__{
           name: String.t(),
           mfa: mfa()

@@ -1,4 +1,4 @@
-defmodule PhxHealth.Status do
+defmodule ExHealth.Status do
   @type t :: %__MODULE__{
           checks: list(),
           interval_ms: integer(),
@@ -10,7 +10,7 @@ defmodule PhxHealth.Status do
         }
 
   defstruct checks: [
-              %PhxHealth.Check{name: "No checks specified", mfa: {PhxHealth.Check, :no_check, []}}
+              %ExHealth.Check{name: "No checks specified", mfa: {ExHealth.Check, :no_check, []}}
             ],
             interval_ms: 15000,
             last_check: nil,

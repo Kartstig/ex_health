@@ -1,6 +1,6 @@
-defmodule PhxHealth do
+defmodule ExHealth do
   @moduledoc """
-  Documentation for PhxHealth.
+  Documentation for ExHealth.
   """
   use Application
 
@@ -58,7 +58,7 @@ defmodule PhxHealth do
   end
 
   def start() do
-    start(:normal, state: %PhxHealth.Status{})
+    start(:normal, state: %ExHealth.Status{})
   end
 
   def start(_type, args) do
@@ -69,27 +69,27 @@ defmodule PhxHealth do
     initial_state = load_config()
 
     children = [
-      supervisor(PhxHealth.HealthServer, [initial_state])
+      supervisor(ExHealth.HealthServer, [initial_state])
     ]
 
-    opts = [strategy: :one_for_one, name: PhxHealth.Supervisor]
+    opts = [strategy: :one_for_one, name: ExHealth.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
   @doc "Fetch the latest status"
-  @spec status() :: PhxHealth.Status.t()
+  @spec status() :: ExHealth.Status.t()
   def status() do
-    GenServer.call(PhxHealth.HealthServer, :status)
+    GenServer.call(ExHealth.HealthServer, :status)
   end
 
   def stop() do
-    Supervisor.stop(PhxHealth.Supervisor, :normal)
+    Supervisor.stop(ExHealth.Supervisor, :normal)
   end
 
   defp configure([]), do: nil
 
   defp configure([{k, v} | remainder]) do
-    Application.put_env(:phx_health, k, v)
+    Application.put_env(:ex_health, k, v)
     configure(remainder)
   end
 
@@ -106,30 +106,30 @@ defmodule PhxHealth do
     function_list = extract_health_checks(module)
 
     for {func, _arr} <- function_list do
-      %PhxHealth.Check{name: remove_function_prefix(func), mfa: {module, func, []}}
+      %ExHealth.Check{name: remove_function_prefix(func), mfa: {module, func, []}}
     end
   end
 
   defp load_config() do
     :ok =
-      case Application.load(:phx_health) do
+      case Application.load(:ex_health) do
         :ok ->
           :ok
 
-        {:error, {:already_loaded, :phx_health}} ->
+        {:error, {:already_loaded, :ex_health}} ->
           :ok
       end
 
-    module = Application.get_env(:phx_health, :module)
-    interval_ms = Application.get_env(:phx_health, :interval_ms, 15000)
+    module = Application.get_env(:ex_health, :module)
+    interval_ms = Application.get_env(:ex_health, :interval_ms, 15000)
 
     mfas =
       case module do
-        nil -> extract_and_transform(PhxHealth.SelfCheck)
+        nil -> extract_and_transform(ExHealth.SelfCheck)
         mod -> extract_and_transform(mod)
       end
 
-    %PhxHealth.Status{
+    %ExHealth.Status{
       checks: mfas,
       interval_ms: interval_ms
     }
@@ -138,6 +138,6 @@ defmodule PhxHealth do
   defp remove_function_prefix(function) do
     name_with_prefix = Atom.to_string(function)
     prefix = String.length(@function_prefix)
-    name = String.slice(name_with_prefix, prefix, String.length(name_with_prefix))
+    String.slice(name_with_prefix, prefix, String.length(name_with_prefix))
   end
 end

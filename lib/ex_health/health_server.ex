@@ -1,4 +1,4 @@
-defmodule PhxHealth.HealthServer do
+defmodule ExHealth.HealthServer do
   use GenServer
 
   def start_link(state) do
@@ -15,12 +15,12 @@ defmodule PhxHealth.HealthServer do
   end
 
   @impl true
-  def handle_call(:status, _from, %PhxHealth.Status{} = state) do
+  def handle_call(:status, _from, %ExHealth.Status{} = state) do
     {:reply, state, state}
   end
 
   @impl true
-  def handle_info(:perform_check, %PhxHealth.Status{} = state) do
+  def handle_info(:perform_check, %ExHealth.Status{} = state) do
     new_state =
       state
       |> get_status()
@@ -53,8 +53,8 @@ defmodule PhxHealth.HealthServer do
     end
   end
 
-  @spec get_status(PhxHealth.Status.t()) :: PhxHealth.Status.t()
-  defp get_status(%PhxHealth.Status{checks: checks} = status) do
+  @spec get_status(ExHealth.Status.t()) :: ExHealth.Status.t()
+  defp get_status(%ExHealth.Status{checks: checks} = status) do
     check_results = perform_checks(checks)
     new_result = build_result(check_results)
 
@@ -78,7 +78,7 @@ defmodule PhxHealth.HealthServer do
 
   @spec perform_checks(list(), list()) :: list()
   defp perform_checks(
-         [%PhxHealth.Check{name: name, mfa: {m, f, a}} = _check | remainder],
+         [%ExHealth.Check{name: name, mfa: {m, f, a}} = _check | remainder],
          results
        ) do
     res = {name, apply(m, f, a)}
