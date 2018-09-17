@@ -57,6 +57,12 @@ defmodule ExHealth do
     end
   end
 
+  defimpl Jason.Encoder, for: [Tuple] do
+    def encode(tuple, opts) do
+      Jason.Encode.list(Tuple.to_list(tuple), opts)
+    end
+  end
+
   def start() do
     start(:normal, state: %ExHealth.Status{})
   end

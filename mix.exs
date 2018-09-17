@@ -21,7 +21,9 @@ defmodule ExHealth.MixProject do
 
   defp deps do
     [
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:jason, "~> 1.1.1"},
+      {:plug, "~> 1.6"}
     ]
   end
 end
