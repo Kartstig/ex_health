@@ -1,2 +1,0 @@
-defmodule PhoenixApp do
-end
