@@ -1,19 +1,77 @@
 defmodule ExHealth do
   @moduledoc """
-  Documentation for ExHealth.
+  [![CircleCI](https://circleci.com/gh/MatchedPattern/ex_health.svg?style=svg)](https://circleci.com/gh/MatchedPattern/ex_health)
+
+  ExHealth is a simple extensible health check utility that monitors your applications.
+
+
+  By itself, ExHealth is a GenServer that periodically performs a set of checks,
+  but you can easily configure your it to serve JSON responses that look like:
+
+      {
+         last_check:"2018-09-18T06:43:53.773719Z",
+         result:{
+            check_results:[
+               [
+                  "Database",
+                  true
+               ],
+               [
+                  "PhoenixExampleWeb_Endpoint",
+                  true
+               ]
+            ],
+            msg:"healthy"
+         }
+      }
+
+  # Getting Started
+
+  Configuration for ExHealth must be present the Application environment. This
+  can be done by updating the `:ex_health` values in your `config/config.exs`:
+
+      config :ex_health,
+        module: MyApplication.HealthChecks,
+        interval_ms: 1000
+
+  # Integrating with Phoenix
+
+  To integrate with [Phoenix](https://hexdocs.pm/phoenix/Phoenix.html)
+  or any other web application, you can take advantage of `ExHealth.Plug` macro
+  which takes care of serving a JSON response at the endpoint `/_health`
+
+
   """
   use Application
 
   @function_prefix "hc__"
 
   @doc """
-  Defines a healthcheck function
+  Defines a healthcheck function.
+
+  Takes the following arguments:
+  1. `name` - a string for the name of the health check
+  2. `block` -  block that returns `boolean()`
+
+  ## Examples:
+
+      defmodule MyApp.HealthChecks do
+        health_check("Database") do
+          MyDB.ping() # This should return true | false
+        end
+      end
   """
   defmacro health_check(name, do: block) do
     function_name = String.to_atom("#{@function_prefix}" <> name)
 
     quote do
-      def unquote(function_name)(), do: unquote(block)
+      def unquote(function_name)() do
+        try do
+          unquote(block)
+        rescue
+          _ -> false
+        end
+      end
     end
   end
 
@@ -21,14 +79,17 @@ defmodule ExHealth do
   Defines a healthcheck function for a given process.
 
   Returns true if the process has one of the following statuses:
-    - :running
-    - :waiting
+    - `:running`
+    - `:waiting`
 
-  example:
+  See [Process.info/1](https://hexdocs.pm/elixir/Process.html#info/1) for more
+  information about process status.
 
-    defmodule MyHealthCheck do
-      process_check(PhoenixAppWeb.Endpoint)
-    end
+  ## Examples:
+
+      defmodule MyApp.HealthChecks do
+        process_check(MyApp.SomeImportantService)
+      end
   """
   defmacro process_check({_, _, module_list} = _module) do
     {module, _} = Code.eval_string(Enum.join(module_list, "."))
@@ -63,6 +124,9 @@ defmodule ExHealth do
     end
   end
 
+  @doc """
+  Starts the application with empty state
+  """
   def start() do
     start(:normal, state: %ExHealth.Status{})
   end
@@ -82,12 +146,35 @@ defmodule ExHealth do
     Supervisor.start_link(children, opts)
   end
 
-  @doc "Fetch the latest status"
+  @doc """
+  Synchronously fetches the latest status from `ExHealth.HealthServer`
+
+  ## Examples:
+
+      iex(1)> ExHealth.status()
+      %ExHealth.Status{
+        checks: [
+          %ExHealth.Check{
+            mfa: {ExHealth.SelfCheck, :hc__ExHealth_HealthServer, []},
+            name: "ExHealth_HealthServer"
+          }
+        ],
+        interval_ms: 15000,
+        last_check: nil,
+        result: %{check_results: [], msg: :pending}
+      }
+
+
+  """
   @spec status() :: ExHealth.Status.t()
   def status() do
     GenServer.call(ExHealth.HealthServer, :status)
   end
 
+  @doc """
+  Stops the Application
+  """
+  @spec stop() :: :ok
   def stop() do
     Supervisor.stop(ExHealth.Supervisor, :normal)
   end
@@ -108,6 +195,7 @@ defmodule ExHealth do
     end)
   end
 
+  @spec extract_and_transform(module()) :: list(ExHealth.Check.t())
   defp extract_and_transform(module) do
     function_list = extract_health_checks(module)
 
@@ -116,6 +204,7 @@ defmodule ExHealth do
     end
   end
 
+  @spec load_config() :: ExHealth.Status.t()
   defp load_config() do
     :ok =
       case Application.load(:ex_health) do

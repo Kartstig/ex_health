@@ -7,5 +7,6 @@ defmodule ExHealth.Check do
   defstruct name: "No checks specified",
             mfa: {__MODULE__, :no_check, []}
 
+  @doc false
   def no_check(), do: false
 end

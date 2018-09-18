@@ -1,8 +1,6 @@
 defmodule ExHealthTest do
   use ExUnit.Case, async: false
 
-  doctest ExHealth
-
   def ensure_down(_) do
     case Process.whereis(ExHealth.Supervisor) do
       nil -> :ok
