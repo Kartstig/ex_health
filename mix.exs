@@ -8,7 +8,8 @@ defmodule ExHealth.MixProject do
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      docs: docs()
+      docs: docs(),
+      package: package()
     ]
   end
 
@@ -39,6 +40,17 @@ defmodule ExHealth.MixProject do
         logo: "https://github.com/MatchedPattern/ex_health/logo.png",
         extras: ["README.md"]
       ]
+    ]
+  end
+
+  defp package do
+    [
+      name: "ExHealth",
+      organization: "Matched Pattern, LLC",
+      licenses: ["MIT"],
+      links: ["https://github.com/MatchedPattern/ex_health"],
+      source_url: "https://github.com/MatchedPattern/ex_health",
+      homepage_url: "https://github.com/MatchedPattern/ex_health"
     ]
   end
 end
