@@ -2,6 +2,7 @@
 
 ExHealth provides a health check endpoint for your application
 
+[![CircleCI](https://circleci.com/gh/MatchedPattern/ex_health.svg?style=svg)](https://circleci.com/gh/MatchedPattern/ex_health)
 
 ## Installation
 

@@ -1,4 +1,22 @@
 defmodule ExHealth.Plug do
+  @doc """
+  A plug for integerating into a web application.
+
+  ## Example:
+
+      defmodule MyWebApp.HealthCheckPlug
+        use ExHealth.Plug
+      end
+
+  You'll have to ensure you're pipeing requests through this plug. In Phoenix
+  `router.ex`:
+
+      scope "/" MyWebApp do
+        forward("/_health", HealthcheckPlug)
+      end
+
+  For a more complete example, see the [Example Phoenix App](examples/phoenix_example)
+  """
   defmacro __using__(_opts) do
     quote do
       import ExHealth
