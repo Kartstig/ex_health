@@ -65,7 +65,13 @@ defmodule ExHealth do
     function_name = String.to_atom("#{@function_prefix}" <> name)
 
     quote do
-      def unquote(function_name)(), do: unquote(block)
+      def unquote(function_name)() do
+        try do
+          unquote(block)
+        rescue
+          _ -> false
+        end
+      end
     end
   end
 
