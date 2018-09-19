@@ -1,0 +1,12 @@
+#!/bin/bash
+
+parent_dir=$(pwd)
+for example in examples/* ; do
+  if [ -d "$example" ]; then
+    cd $example
+    mix deps.get
+    mix deps.compile
+    mix test
+    cd $parent_dir
+  fi
+done

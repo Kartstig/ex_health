@@ -59,5 +59,7 @@ jobs:
             - _build
             - ~/.mix
 
+      - run: script/test_examples # run tests for examples
+
       - store_test_results:  # upload junit test results for display in Test Summary
           path: _build/test/ex_health # Replace with the name of your :app

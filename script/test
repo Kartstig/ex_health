@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+mix test
+mix dialyzer
+
+./script/test_examples
+
