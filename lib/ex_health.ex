@@ -34,11 +34,23 @@ defmodule ExHealth do
         module: MyApplication.HealthChecks,
         interval_ms: 1000
 
+  Then you must define a module `MyApplication.HealthChecks` with some checks:
+
+      defmodule MyApplication.HealthChecks do
+        process_check(MyApplication.CacheServer)
+
+        test "Redis" do
+          MyRedis.ping() # This should return :ok | {:error, "Message"}
+        end
+      end
+
   # Integrating with Phoenix
 
   To integrate with [Phoenix](https://hexdocs.pm/phoenix/Phoenix.html)
-  or any other web application, you can take advantage of `ExHealth.Plug` macro
-  which takes care of serving a JSON response at the endpoint `/_health`
+  or any other web framework, you can take advantage of `ExHealth.Plug`
+  which handles serving a JSON response for you.
+
+  See `ExHealth.Plug` for instructions.
 
 
   """
@@ -51,13 +63,13 @@ defmodule ExHealth do
 
   Takes the following arguments:
   1. `name` - a string for the name of the health check
-  2. `block` -  block that returns `boolean()`
+  2. `block` -  block that returns `:ok | true | {:error, "Reason"}`
 
   ## Examples:
 
       defmodule MyApp.HealthChecks do
         health_check("Database") do
-          MyDB.ping() # This should return true | false
+          MyDB.ping() # This should return  :ok | true | {:error, "Reason"}
         end
       end
   """
@@ -69,7 +81,7 @@ defmodule ExHealth do
         try do
           unquote(block)
         rescue
-          _ -> false
+          _ -> {:error, "Unreachable"}
         end
       end
     end
@@ -99,18 +111,18 @@ defmodule ExHealth do
       def unquote(function_name)() do
         case Process.whereis(unquote(module)) do
           nil ->
-            false
+            {:error, "no proc"}
 
           pid ->
             case Process.info(pid) do
               nil ->
-                false
+                {:error, "no proc"}
 
               info ->
                 case Keyword.fetch(info, :status) do
                   {:ok, :running} -> true
                   {:ok, :waiting} -> true
-                  _ -> false
+                  _ -> {:error, "process not running/waiting"}
                 end
             end
         end
