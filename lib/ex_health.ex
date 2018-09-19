@@ -5,8 +5,9 @@ defmodule ExHealth do
   ExHealth is a simple extensible health check utility that monitors your applications.
 
 
-  By itself, ExHealth is a GenServer that periodically performs a set of checks,
-  but you can easily configure your it to serve JSON responses that look like:
+  By itself, ExHealth is a supervised GenServer that periodically performs a set
+  of checks, but you can easily configure your it to serve JSON responses that
+  look like:
 
       {
          last_check:"2018-09-18T06:43:53.773719Z",
