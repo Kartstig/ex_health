@@ -1,8 +1,8 @@
-# ExHealth
+# ExHealth ![ExHealth](logo.png)
+
+[![CircleCI](https://circleci.com/gh/MatchedPattern/ex_health/tree/master.svg?style=svg&circle-token=8ed28fee90111e2a034b0d71e0fcf8ae18bba641)](https://circleci.com/gh/MatchedPattern/ex_health/tree/master)
 
 ExHealth provides a health check endpoint for your application
-
-[![CircleCI](https://circleci.com/gh/MatchedPattern/ex_health.svg?style=svg)](https://circleci.com/gh/MatchedPattern/ex_health)
 
 ## Installation
 
