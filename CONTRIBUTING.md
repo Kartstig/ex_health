@@ -5,16 +5,34 @@ email, or any other method with the owners of this repository before making a ch
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
-## Pull Request Process
+## Developer Setup
+Once you have the repo cloned, just run
+```bash
+$ mix deps.get
+```
 
-1. Ensure any install or build dependencies are removed before the end of the layer when doing a
-   build.
-2. Update the README.md with details of changes to the interface, this includes new environment
-   variables, exposed ports, useful file locations and container parameters.
-3. Increase the version numbers in any examples files and the README.md to the new version that this
-   Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
-4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
-   do not have permission to do that, you may request the second reviewer to merge it for you.
+and then you should be able start ExHealth with CLI:
+```bash
+$ iex -S mix
+```
+
+## Running Tests
+We're using CircleCI to run our builds, and it runs fairly quickly, but if you'd
+like to run tests locally, you should run the following:
+```bash
+$ script/test
+```
+
+This runs ExHealth tests, dialyzer, and tests located in example applications.
+
+## Pull Request Process
+1. Create your own fork this repository.
+2. Update the README.md with details of changes to any configuration, setup, or
+   functionality of this application.
+3. Increase the version numbers in `mix.exs`. The versioning scheme we use is [SemVer](http://semver.org/).
+4. Please include relevant tests and/or modifications to the examples.
+5. You may merge the Pull Request once you have the sign-off of one other developers, or if you
+   do not have permission to do that, the reviewer should merge it for you.
 
 ## Code of Conduct
 

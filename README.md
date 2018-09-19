@@ -1,8 +1,8 @@
 # ExHealth ![ExHealth](logo.png)
+> A health check utility for any OTP application
 
-[![CircleCI](https://circleci.com/gh/MatchedPattern/ex_health/tree/master.svg?style=svg&circle-token=8ed28fee90111e2a034b0d71e0fcf8ae18bba641)](https://circleci.com/gh/MatchedPattern/ex_health/tree/master)
+[![Build Status](https://circleci.com/gh/MatchedPattern/ex_health/tree/master.svg?style=svg&circle-token=8ed28fee90111e2a034b0d71e0fcf8ae18bba641)](https://circleci.com/gh/MatchedPattern/ex_health/tree/master)
 
-ExHealth provides a health check endpoint for your application
 
 ## Installation
 
@@ -25,7 +25,55 @@ def application do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/ex_health](https://hexdocs.pm/ex_health).
+# Getting Started
+
+Configuration for ExHealth must be present the Application environment. This
+can be done by updating the `:ex_health` values in your `config/config.exs`:
+```elixir
+config :ex_health,
+  module: MyApplication.HealthChecks,
+  interval_ms: 1000
+```
+
+Then you must define a module `MyApplication.HealthChecks` with some checks:
+```elixir
+defmodule MyApplication.HealthChecks do
+  process_check(MyApplication.CacheServer)
+
+  test "Redis" do
+    MyRedis.ping() # This should return :ok | {:error, "Message"}
+  end
+end
+```
+
+## Online Documentation
+
+Please see the documentation for ExHealth at [https://hexdocs.pm/ex_health](https://hexdocs.pm/ex_health)
+
+## Offline Documentation
+
+You can generate documentation by running the following:
+```bash
+$ mix docs
+```
+
+You can find examples in [examples/](examples/)
+
+## Contributing
+
+Pull requests are welcome. The best way to get started is to check out [CONTRIBUTING](CONTRIBUTING.md).
+
+Once you have the repo cloned, just run
+```bash
+$ mix deps.get
+```
+
+and then you can start ExHealth with CLI:
+```bash
+$ iex -S mix
+```
+
+## License
+
+See [LICENSE](LICENSE) for more information.
 
