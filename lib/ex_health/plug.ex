@@ -1,53 +1,31 @@
 defmodule ExHealth.Plug do
-  @doc """
+  @moduledoc """
   A plug for integerating into a web application.
 
-  ## Example:
+  ## Examples:
+  In Phoenix `router.ex`:
 
-      defmodule MyWebApp.HealthCheckPlug
-        use ExHealth.Plug
+      scope "/" do
+        forward("/_health", ExHealth.Plug)
       end
 
-  You'll have to ensure you're pipeing requests through this plug. In Phoenix
-  `router.ex`:
-
-      scope "/" MyWebApp do
-        forward("/_health", HealthcheckPlug)
-      end
+  Please ensure to use `scope/2`, otherwise the alias will not let you access
+  the ExHealth namespace
 
   For a more complete example, see the [Example Phoenix App](examples/phoenix_example)
   """
-  defmacro __using__(_opts) do
-    quote do
-      import ExHealth
-      import Plug.Conn
-      @before_compile ExHealth.Plug
-    end
-  end
+  import ExHealth
+  import Plug.Conn
+  @behaviour Plug
 
-  defmacro __before_compile__(_env) do
-    quote do
-      @behaviour Plug
-      @defaults [endpoint: "/_health"]
+  def init(opts), do: opts
 
-      def init(opts), do: Keyword.merge(@defaults, opts)
+  def call(%Plug.Conn{} = conn, opts) do
+    resp = ExHealth.status() |> Jason.encode!()
 
-      def call(%Plug.Conn{request_path: request_path} = conn, opts) do
-        {:ok, endpoint} = Keyword.fetch(opts, :endpoint)
-
-        case request_path do
-          ^endpoint ->
-            resp = ExHealth.status() |> Jason.encode!()
-
-            conn
-            |> put_resp_content_type("application/json", "UTF-8")
-            |> send_resp(200, resp)
-            |> halt()
-
-          _ ->
-            conn
-        end
-      end
-    end
+    conn
+    |> put_resp_content_type("application/json", "UTF-8")
+    |> send_resp(200, resp)
+    |> halt()
   end
 end
