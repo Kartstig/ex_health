@@ -56,8 +56,9 @@ defmodule ExHealth.HealthServer do
   @spec determine_status(list()) :: atom()
   defp determine_status([res | remainder]) do
     case res do
-      {_name, false} -> :unhealthy
       {_name, true} -> determine_status(remainder)
+      {_name, :ok} -> determine_status(remainder)
+      {_name, _} -> :unhealthy
     end
   end
 

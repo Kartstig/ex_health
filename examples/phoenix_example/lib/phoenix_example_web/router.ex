@@ -14,12 +14,16 @@ defmodule PhoenixExampleWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/", PhoenixExampleWeb do
+  scope "/" do
     # Use the default browser stack
     pipe_through(:browser)
 
-    get("/", PageController, :index)
-    forward("/_health", HealthcheckPlug)
+    get("/", PhoenixExampleWeb.PageController, :index)
+  end
+
+  scope "/" do
+    pipe_through(:browser)
+    forward("/_health", ExHealth.Plug)
   end
 
   # Other scopes may use custom stacks.

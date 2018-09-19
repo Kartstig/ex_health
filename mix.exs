@@ -49,6 +49,7 @@ defmodule ExHealth.MixProject do
       organization: "Matched Pattern, LLC",
       licenses: ["MIT"],
       links: ["https://github.com/MatchedPattern/ex_health"],
+      maintainers: ["Herman Singh"],
       source_url: "https://github.com/MatchedPattern/ex_health",
       homepage_url: "https://github.com/MatchedPattern/ex_health"
     ]
