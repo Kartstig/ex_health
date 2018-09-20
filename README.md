@@ -3,6 +3,28 @@
 
 [![Build Status](https://circleci.com/gh/MatchedPattern/ex_health/tree/master.svg?style=svg&circle-token=8ed28fee90111e2a034b0d71e0fcf8ae18bba641)](https://circleci.com/gh/MatchedPattern/ex_health/tree/master)
 
+ExHealth runs a supervised GenServer that performs routine health checks which
+are configurable to your application. Check out [ExHealth.Plug](lib/ex_health/plug.ex)
+for integrating the result into a web endpoint which yields a JSON response like:
+
+```json
+{
+   last_check:"2018-09-18T06:43:53.773719Z",
+   result:{
+      check_results:[
+         [
+            "Database",
+            true
+         ],
+         [
+            "PhoenixExampleWeb_Endpoint",
+            true
+         ]
+      ],
+      msg:"healthy"
+   }
+}
+```
 
 ## Installation
 
@@ -25,7 +47,7 @@ def application do
 end
 ```
 
-# Getting Started
+## Getting Started
 
 Configuration for ExHealth must be present the Application environment. This
 can be done by updating the `:ex_health` values in your `config/config.exs`:
