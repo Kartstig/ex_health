@@ -7,7 +7,7 @@ ExHealth runs a supervised GenServer that performs routine health checks which
 are configurable to your application. Check out [ExHealth.Plug](lib/ex_health/plug.ex)
 for integrating the result into a web endpoint which yields a JSON response like:
 
-```json
+```javascript
 {
    last_check:"2018-09-18T06:43:53.773719Z",
    result:{
