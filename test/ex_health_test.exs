@@ -87,7 +87,7 @@ defmodule ExHealthTest do
              }
            } = ExHealth.status()
 
-    assert {"ExHealth_HealthServer", true} in check_results
+    assert {"ExHealth_HealthServer", :ok} in check_results
   end
 
   test "status/0 returns healthy result when all results are good" do

@@ -82,7 +82,7 @@ defmodule ExHealth do
         try do
           unquote(block)
         rescue
-          _ -> {:error, "Unreachable"}
+          _ -> {:error, "Error in HealthCheck"}
         end
       end
     end
@@ -121,8 +121,8 @@ defmodule ExHealth do
 
               info ->
                 case Keyword.fetch(info, :status) do
-                  {:ok, :running} -> true
-                  {:ok, :waiting} -> true
+                  {:ok, :running} -> :ok
+                  {:ok, :waiting} -> :ok
                   _ -> {:error, "process not running/waiting"}
                 end
             end
