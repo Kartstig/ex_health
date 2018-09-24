@@ -99,3 +99,5 @@ $ iex -S mix
 
 See [LICENSE](LICENSE) for more information.
 
+
+_by Herman Singh of Matched Pattern_

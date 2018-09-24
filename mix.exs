@@ -4,6 +4,7 @@ defmodule ExHealth.MixProject do
   def project do
     [
       app: :ex_health,
+      description: "A health check utility for any OTP application",
       version: "0.1.0",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
@@ -45,10 +46,11 @@ defmodule ExHealth.MixProject do
 
   defp package do
     [
-      name: "ExHealth",
-      organization: "Matched Pattern, LLC",
+      name: "ex_health",
       licenses: ["MIT"],
-      links: ["https://github.com/MatchedPattern/ex_health"],
+      links: %{
+        git: "https://github.com/MatchedPattern/ex_health"
+      },
       maintainers: ["Herman Singh"],
       source_url: "https://github.com/MatchedPattern/ex_health",
       homepage_url: "https://github.com/MatchedPattern/ex_health"
