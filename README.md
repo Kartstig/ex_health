@@ -14,11 +14,11 @@ for integrating the result into a web endpoint which yields a JSON response like
       check_results:[
          [
             "Database",
-            true
+            "ok"
          ],
          [
             "PhoenixExampleWeb_Endpoint",
-            true
+            "ok"
          ]
       ],
       msg:"healthy"
@@ -28,8 +28,7 @@ for integrating the result into a web endpoint which yields a JSON response like
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `ex_health` to your list of dependencies in `mix.exs`:
+Add `ex_health` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -54,7 +53,7 @@ can be done by updating the `:ex_health` values in your `config/config.exs`:
 ```elixir
 config :ex_health,
   module: MyApplication.HealthChecks,
-  interval_ms: 1000
+  interval_ms: 1000 # Interval between checks in milliseconds
 ```
 
 Then you must define a module `MyApplication.HealthChecks` with some checks:

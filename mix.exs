@@ -37,7 +37,7 @@ defmodule ExHealth.MixProject do
     [
       name: "ExHealth",
       source_url: "https://github.com/MatchedPattern/ex_health",
-      homepage_url: "https://github.com/MatchedPattern/ex_health",
+      homepage_url: "https://hexdocs.pm/ex_health",
       docs: [
         main: "ExHealth",
         logo: "https://github.com/MatchedPattern/ex_health/logo.png",
@@ -55,7 +55,7 @@ defmodule ExHealth.MixProject do
       },
       maintainers: ["Herman Singh"],
       source_url: "https://github.com/MatchedPattern/ex_health",
-      homepage_url: "https://github.com/MatchedPattern/ex_health"
+      homepage_url: "https://hexdocs.pm/ex_health"
     ]
   end
 end
