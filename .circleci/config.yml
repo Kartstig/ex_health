@@ -7,7 +7,8 @@ jobs:
     docker:
       # specify the version here
       - image: elixir:1.7.3
-
+        environment:
+          CODECOV_TOKEN: e93b20f3-0562-4c71-a21d-fe67f9625623
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -29,7 +30,7 @@ jobs:
           keys:
             - v1-build-cache-{{ .Branch }}
             - v1-build-cache
-      - run: mix do deps.get, compile  # get updated dependencies & compile them
+      - run: MIX_ENV=test mix do deps.get, compile --warnings-as-errors
       - save_cache:  # generate and store mix cache
           key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
           paths: "deps"
@@ -48,7 +49,7 @@ jobs:
 
       - run: mix format --check-formatted # fail on formatting
 
-      - run: mix test  # run all tests in project
+      - run: MIX_ENV=test mix coveralls.json  # run all tests in project
 
       - restore_cache:
           keys:
@@ -65,3 +66,8 @@ jobs:
 
       - store_test_results:  # upload junit test results for display in Test Summary
           path: _build/test/ex_health # Replace with the name of your :app
+
+      - run:
+          name: Codecov Report
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success

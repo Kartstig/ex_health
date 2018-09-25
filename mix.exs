@@ -8,6 +8,7 @@ defmodule ExHealth.MixProject do
       version: "0.1.0",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
+      test_coverage: [tool: ExCoveralls],
       deps: deps(),
       docs: docs(),
       package: package()
@@ -25,6 +26,7 @@ defmodule ExHealth.MixProject do
   defp deps do
     [
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:excoveralls, "~> 0.4", only: [:test], runtime: false},
       {:ex_doc, "~> 0.19", only: [:dev], runtime: false},
       {:jason, "~> 1.1.1"},
       {:plug, "~> 1.6"}

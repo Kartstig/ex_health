@@ -14,13 +14,12 @@ defmodule ExHealth.Plug do
 
   For a more complete example, see the [Example Phoenix App](examples/phoenix_example)
   """
-  import ExHealth
   import Plug.Conn
   @behaviour Plug
 
   def init(opts), do: opts
 
-  def call(%Plug.Conn{} = conn, opts) do
+  def call(%Plug.Conn{} = conn, _opts) do
     resp = ExHealth.status() |> Jason.encode!()
 
     conn
