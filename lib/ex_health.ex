@@ -15,11 +15,11 @@ defmodule ExHealth do
             check_results:[
                [
                   "Database",
-                  true
+                  "ok"
                ],
                [
                   "PhoenixExampleWeb_Endpoint",
-                  true
+                  "ok"
                ]
             ],
             msg:"healthy"
