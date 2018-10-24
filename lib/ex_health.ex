@@ -110,22 +110,14 @@ defmodule ExHealth do
 
     quote do
       def unquote(function_name)() do
-        case Process.whereis(unquote(module)) do
-          nil ->
-            {:error, "no proc"}
-
-          pid ->
-            case Process.info(pid) do
-              nil ->
-                {:error, "no proc"}
-
-              info ->
-                case Keyword.fetch(info, :status) do
-                  {:ok, :running} -> :ok
-                  {:ok, :waiting} -> :ok
-                  _ -> {:error, "process not running/waiting"}
-                end
-            end
+        with pid <- Process.whereis(unquote(module)),
+             info <- Process.info(pid),
+             {:ok, status} <- Keyword.fetch(info, :status),
+             status == :running || :waiting do
+          :ok
+        else
+          nil -> {:error, "no proc"}
+          _ -> {:error, "process not running/waiting"}
         end
       end
     end
