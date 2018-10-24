@@ -91,7 +91,7 @@ defmodule ExHealth do
   @doc """
   Defines a healthcheck function for a given process.
 
-  Returns true if the process has one of the following statuses:
+  Returns `:ok` if the process has one of the following statuses:
     - `:running`
     - `:waiting`
 
