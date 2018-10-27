@@ -1,4 +1,7 @@
 defmodule ExHealth.Status do
+  @moduledoc """
+  A struct for storing state of the HealthServer
+  """
   @type t :: %__MODULE__{
           checks: list(),
           interval_ms: integer(),
@@ -13,7 +16,7 @@ defmodule ExHealth.Status do
   defstruct checks: [
               %ExHealth.Check{name: "No checks specified", mfa: {ExHealth.Check, :no_check, []}}
             ],
-            interval_ms: 15000,
+            interval_ms: 15_000,
             last_check: nil,
             result: %{
               msg: :pending,
@@ -21,7 +24,7 @@ defmodule ExHealth.Status do
             }
 
   @spec to_json(__MODULE__.t()) :: String.t()
-  def to_json(status = %__MODULE__{}) do
+  def to_json(%__MODULE__{} = status) do
     status
     |> Jason.encode!()
   end

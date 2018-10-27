@@ -221,7 +221,7 @@ defmodule ExHealth do
       end
 
     module = Application.get_env(:ex_health, :module)
-    interval_ms = Application.get_env(:ex_health, :interval_ms, 15000)
+    interval_ms = Application.get_env(:ex_health, :interval_ms, 15_000)
 
     mfas =
       case module do
