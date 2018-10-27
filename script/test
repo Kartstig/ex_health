@@ -2,6 +2,7 @@
 
 set -e
 
+mix credo . .credo.exs
 mix test
 mix dialyzer
 
