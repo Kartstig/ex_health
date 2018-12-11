@@ -1,7 +1,7 @@
 # ExHealth ![ExHealth](logo.png)
 > A health check utility for any OTP application
 
-[![Build Status](https://circleci.com/gh/MatchedPattern/ex_health/tree/master.svg?style=svg&circle-token=8ed28fee90111e2a034b0d71e0fcf8ae18bba641)](https://circleci.com/gh/MatchedPattern/ex_health/tree/master) [![codecov](https://codecov.io/gh/MatchedPattern/ex_health/branch/master/graph/badge.svg)](https://codecov.io/gh/MatchedPattern/ex_health)
+[![Build Status](https://circleci.com/gh/Kartstig/ex_health/tree/master.svg?style=svg&circle-token=8ed28fee90111e2a034b0d71e0fcf8ae18bba641)](https://circleci.com/gh/Kartstig/ex_health/tree/master) [![codecov](https://codecov.io/gh/Kartstig/ex_health/branch/master/graph/badge.svg)](https://codecov.io/gh/Kartstig/ex_health)
 
 ExHealth runs a supervised GenServer that performs routine health checks which
 are configurable to your application. Check out [ExHealth.Plug](lib/ex_health/plug.ex)

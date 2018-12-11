@@ -37,11 +37,11 @@ defmodule ExHealth.MixProject do
   defp docs do
     [
       name: "ExHealth",
-      source_url: "https://github.com/MatchedPattern/ex_health",
+      source_url: "https://github.com/Kartstig/ex_health",
       homepage_url: "https://hexdocs.pm/ex_health",
       docs: [
         main: "ExHealth",
-        logo: "https://github.com/MatchedPattern/ex_health/logo.png",
+        logo: "https://github.com/Kartstig/ex_health/logo.png",
         extras: ["README.md"]
       ]
     ]
@@ -52,10 +52,10 @@ defmodule ExHealth.MixProject do
       name: "ex_health",
       licenses: ["MIT"],
       links: %{
-        git: "https://github.com/MatchedPattern/ex_health"
+        git: "https://github.com/Kartstig/ex_health"
       },
       maintainers: ["Herman Singh"],
-      source_url: "https://github.com/MatchedPattern/ex_health",
+      source_url: "https://github.com/Kartstig/ex_health",
       homepage_url: "https://hexdocs.pm/ex_health"
     ]
   end
