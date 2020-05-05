@@ -5,7 +5,7 @@ defmodule ExHealth.MixProject do
     [
       app: :ex_health,
       description: "A health check utility for any OTP application",
-      version: "0.1.2",
+      version: "0.1.3",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
@@ -25,12 +25,12 @@ defmodule ExHealth.MixProject do
 
   defp deps do
     [
-      {:credo, "~> 0.10.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
-      {:excoveralls, "~> 0.4", only: [:test], runtime: false},
-      {:ex_doc, "~> 0.19", only: [:dev], runtime: false},
-      {:jason, "~> 1.1.1"},
-      {:plug, "~> 1.6"}
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:excoveralls, "~> 0.12", only: [:test], runtime: false},
+      {:ex_doc, "~> 0.21", only: [:dev], runtime: false},
+      {:jason, "~> 1.1"},
+      {:plug, "~> 1.10"}
     ]
   end
 
