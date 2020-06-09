@@ -145,4 +145,88 @@ defmodule ExHealthTest do
     assert {"something_good", true} in check_results
     assert {"something_bad", false} in check_results
   end
+
+  defmodule FakeProcessGood do
+    import ExHealth
+
+    def start do
+      Agent.start_link(fn -> :test end, name: __MODULE__)
+    end
+
+    process_check(ExHealthTest.FakeProcessGood)
+  end
+
+  test "status/0 returns healthy result if process is running or waiting" do
+    interval_ms = 5
+
+    {:ok, _pid} = FakeProcessGood.start()
+
+    {:ok, _pid} =
+      ExHealth.start(:normal,
+        interval_ms: interval_ms,
+        module: __MODULE__.FakeProcessGood
+      )
+
+    Process.sleep(interval_ms)
+
+    %ExHealth.Status{
+      result: %{
+        msg: :healthy,
+        check_results: check_results
+      }
+    } = ExHealth.status()
+
+    assert {"ExHealthTest_FakeProcessGood", :ok} in check_results
+  end
+
+  test "status/0 returns unhealthy result if process stopped" do
+    interval_ms = 5
+
+    {:ok, pid} = FakeProcessGood.start()
+
+    {:ok, _pid} =
+      ExHealth.start(:normal,
+        interval_ms: interval_ms,
+        module: __MODULE__.FakeProcessGood
+      )
+
+    Agent.stop(pid)
+
+    Process.sleep(interval_ms)
+
+    %ExHealth.Status{
+      result: %{
+        msg: :unhealthy,
+        check_results: check_results
+      }
+    } = ExHealth.status()
+
+    assert {"ExHealthTest_FakeProcessGood", {:error, "no proc"}} in check_results
+  end
+
+  test "status/0 returns unhealthy result if no process running/registered" do
+    interval_ms = 5
+
+    defmodule FakeProcessBad do
+      import ExHealth
+      process_check(ExHealthTest.FakeProcessBad)
+    end
+
+    {:ok, _pid} =
+      ExHealth.start(:normal,
+        interval_ms: interval_ms,
+        module: __MODULE__.FakeProcessBad
+      )
+
+    Process.sleep(interval_ms)
+
+    %ExHealth.Status{
+      result: %{
+        msg: :unhealthy,
+        check_results: check_results
+      }
+    } = ExHealth.status()
+
+    assert {"ExHealthTest_FakeProcessBad", {:error, "no proc"}} in check_results
+  end
 end
