@@ -5,7 +5,7 @@ defmodule ExHealth.MixProject do
     [
       app: :ex_health,
       description: "A health check utility for any OTP application",
-      version: "0.1.3",
+      version: "0.2.0",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
