@@ -1,6 +1,6 @@
 defmodule ExHealth.Status do
   @moduledoc """
-  A struct for storing state of the HealthServer
+  A struct for storing state of the HealthServer.
   """
   @type t :: %__MODULE__{
           checks: list(),

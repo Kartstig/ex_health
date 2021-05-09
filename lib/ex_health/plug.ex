@@ -2,7 +2,8 @@ defmodule ExHealth.Plug do
   @moduledoc """
   A plug for integerating into a web application.
 
-  ## Examples:
+  ## Examples
+
   In Phoenix `router.ex`:
 
       scope "/" do
@@ -10,9 +11,9 @@ defmodule ExHealth.Plug do
       end
 
   Please ensure to use `scope/2`, otherwise the alias will not let you access
-  the ExHealth namespace
+  the `ExHealth` namespace.
 
-  For a more complete example, see the [Example Phoenix App](examples/phoenix_example)
+  For a more complete example, see the [Example Phoenix App](https://github.com/Kartstig/ex_health/tree/master/examples/phoenix_example).
   """
   import Plug.Conn
   @behaviour Plug
