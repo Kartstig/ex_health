@@ -2,7 +2,7 @@ defmodule ExHealth.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/Kartstig/ex_health"
-  @version "0.2.0"
+  @version "0.2.1"
 
   def project do
     [
@@ -30,8 +30,8 @@ defmodule ExHealth.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.12", only: [:test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: [:dev], runtime: false},
-      {:jason, "~> 1.1"},
-      {:plug, "~> 1.10"}
+      {:jason, "~> 1.2"},
+      {:plug, "~> 1.11"}
     ]
   end
 
