@@ -1,13 +1,15 @@
 defmodule ExHealth.HealthServer do
   @moduledoc """
-  The HealthServer is a GenServer that is responsible for running all health checks
-  and determining system health. All other integrations must communicate to the
-  HealthServer to get information about the latest checks.
+  The HealthServer is a GenServer that is responsible for running all health
+  checks and determining system health.
+
+  All other integrations must communicate to the HealthServer to get
+  information about the latest checks.
   """
   use GenServer
 
   @doc """
-  Start the HealthServer for a given state of type ExHealth.Status.t().
+  Start the HealthServer for a given state of type `ExHealth.Status.t`.
   """
   def start_link(state) do
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
