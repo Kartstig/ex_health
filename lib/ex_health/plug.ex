@@ -20,12 +20,22 @@ defmodule ExHealth.Plug do
 
   def init(opts), do: opts
 
+  defp http_status(%ExHealth.Status{result: %{msg: :healthy}}), do: 200
+  defp http_status(%ExHealth.Status{}), do: 503
+
   def call(%Plug.Conn{} = conn, _opts) do
     resp = ExHealth.status() |> Jason.encode!()
 
+    http_err_code = Application.get_env(:ex_health, :http_err_code, false)
+
+    code = case http_err_code do
+      true -> ExHealth.status() |> http_status()
+      _ -> 200
+    end
+
     conn
     |> put_resp_content_type("application/json", "UTF-8")
-    |> send_resp(200, resp)
+    |> send_resp(code, resp)
     |> halt()
   end
 end
