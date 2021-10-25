@@ -64,7 +64,8 @@ can be done by updating the `:ex_health` values in your `config/config.exs`:
 ```elixir
 config :ex_health,
   module: MyApplication.HealthChecks,
-  interval_ms: 1000 # Interval between checks in milliseconds
+  interval_ms: 1000, # Interval between checks in milliseconds
+  http_err_code: true # Enable http error code (503) on unhealthy status
 ```
 
 Then you must define a module `MyApplication.HealthChecks` with some checks:
