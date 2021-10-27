@@ -28,10 +28,11 @@ defmodule ExHealth.Plug do
 
     http_err_code = Application.get_env(:ex_health, :http_err_code, false)
 
-    code = case http_err_code do
-      true -> ExHealth.status() |> http_status()
-      _ -> 200
-    end
+    code =
+      case http_err_code do
+        true -> ExHealth.status() |> http_status()
+        _ -> 200
+      end
 
     conn
     |> put_resp_content_type("application/json", "UTF-8")
