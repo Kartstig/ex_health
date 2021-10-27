@@ -2,7 +2,7 @@ defmodule ExHealth.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/Kartstig/ex_health"
-  @version "0.2.2"
+  @version "0.3.0"
 
   def project do
     [
