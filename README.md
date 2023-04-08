@@ -1,6 +1,6 @@
 # ExHealth ![ExHealth](./assets/logo.png)
 
-[![Build Status](https://circleci.com/gh/Kartstig/ex_health/tree/master.svg?style=svg&circle-token=8ed28fee90111e2a034b0d71e0fcf8ae18bba641)](https://circleci.com/gh/Kartstig/ex_health/tree/master)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Kartstig/ex_health/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Kartstig/ex_health/tree/master)
 [![codecov](https://codecov.io/gh/Kartstig/ex_health/branch/master/graph/badge.svg)](https://codecov.io/gh/Kartstig/ex_health)
 [![Module Version](https://img.shields.io/hexpm/v/ex_health.svg)](https://hex.pm/packages/ex_health)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/ex_health/)
@@ -40,7 +40,7 @@ Add `:ex_health` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ex_health, "~> 0.3.0"}
+    {:ex_health, "~> 0.4.0"}
   ]
 end
 ```

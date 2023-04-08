@@ -1,11 +1,11 @@
 defmodule PlugTest do
   use ExUnit.Case, async: true
 
-  test "call/2 returns the correct JSON payload" do
-    endpoint = "/_health"
+  @endpoint "/_health"
 
+  test "call/2 returns the correct JSON payload" do
     result =
-      Plug.Adapters.Test.Conn.conn(%Plug.Conn{}, :get, endpoint, %{})
+      Plug.Adapters.Test.Conn.conn(%Plug.Conn{}, :get, @endpoint, %{})
       |> ExHealth.Plug.call([])
 
     assert %Plug.Conn{
@@ -17,5 +17,16 @@ defmodule PlugTest do
              "last_check" => nil,
              "result" => %{"check_results" => [], "msg" => "pending"}
            } = Jason.decode!(body)
+  end
+
+  test "call/2 returns a 503 when :http_err_code is set to true" do
+    Application.put_env(:ex_health, :http_err_code, true)
+
+    result =
+      Plug.Adapters.Test.Conn.conn(%Plug.Conn{}, :get, @endpoint, %{})
+      |> ExHealth.Plug.call([])
+
+    assert result.status == 503
+    Application.put_env(:ex_health, :http_err_code, false)
   end
 end
