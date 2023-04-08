@@ -89,14 +89,15 @@ defmodule ExHealth do
   end
 
   def start(_type, args) do
-    import Supervisor.Spec
-
     configure(args)
 
     initial_state = load_config()
 
     children = [
-      supervisor(ExHealth.HealthServer, [initial_state])
+      %{
+        id: ExHealth.HealthServer,
+        start: {ExHealth.HealthServer, :start_link, [initial_state]}
+      }
     ]
 
     opts = [strategy: :one_for_one, name: ExHealth.Supervisor]
