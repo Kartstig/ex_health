@@ -25,6 +25,7 @@ defmodule PlugTest do
     result =
       Plug.Adapters.Test.Conn.conn(%Plug.Conn{}, :get, @endpoint, %{})
       |> ExHealth.Plug.call([])
+
     assert result.status == 503
     Application.put_env(:ex_health, :http_err_code, false)
   end
