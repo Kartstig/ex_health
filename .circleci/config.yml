@@ -6,7 +6,7 @@ jobs:
   build:
     docker:
       # specify the version here
-      - image: elixir:1.7.3
+      - image: elixir:1.14.4
         environment:
           CODECOV_TOKEN: e93b20f3-0562-4c71-a21d-fe67f9625623
       # Specify service dependencies here if necessary
