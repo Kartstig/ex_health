@@ -48,7 +48,7 @@ defmodule ExHealthTest do
                  mfa: {TestHealthCallbacks, :hc__some_fake_test, []}
                }
              ],
-             interval_ms: interval_ms,
+             interval_ms: ^interval_ms,
              result: %{
                msg: :healthy,
                check_results: [{"some_fake_test", true}]
