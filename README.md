@@ -109,4 +109,4 @@ $ iex -S mix
 
 Copyright (c) 2018 Herman Singh.
 
-This software is licensed under [the MIT license](./LICENSE).
+This software is licensed under [the MIT license](./LICENSE.md).
