@@ -105,6 +105,10 @@ and then you can start ExHealth with CLI:
 $ iex -S mix
 ```
 
+## Sponsorship
+
+Put your logo here! [Become a sponsor](https://github.com/sponsors/Kartstig) and support this project!
+
 ## Copyright and License
 
 Copyright (c) 2018 Herman Singh.
