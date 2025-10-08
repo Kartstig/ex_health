@@ -72,9 +72,10 @@ Then you must define a module `MyApplication.HealthChecks` with some checks:
 
 ```elixir
 defmodule MyApplication.HealthChecks do
+  import ExHealth
   process_check(MyApplication.CacheServer)
 
-  test "Redis" do
+  health_check "Redis" do
     MyRedis.ping() # This should return :ok | {:error, "Message"}
   end
 end
